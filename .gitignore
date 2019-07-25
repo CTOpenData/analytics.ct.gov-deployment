@@ -1,3 +1,6 @@
 log/
 test.ignore
 analytics-site/
+.env
+node_modules/
+key.json
