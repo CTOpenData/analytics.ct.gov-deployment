@@ -5,3 +5,5 @@ analytics-site/
 .env.ps1
 node_modules/
 key.json
+env.ps1
+.vscode/
