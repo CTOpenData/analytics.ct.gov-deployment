@@ -2,5 +2,6 @@ log/
 test.ignore
 analytics-site/
 .env
+.env.ps1
 node_modules/
 key.json
