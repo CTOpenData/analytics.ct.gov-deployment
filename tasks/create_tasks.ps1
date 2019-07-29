@@ -1,3 +1,7 @@
+# Set up location for scheduler to correctly read from
+param (
+  [Parameter(Mandatory=$true)][string]$Location
+)
 # Realtime task (every minute)
 & "SCHTASKS" `
 /Create `
