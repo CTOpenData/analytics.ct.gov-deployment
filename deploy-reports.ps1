@@ -1,10 +1,12 @@
 # Setup env variables
 param (
-  [Parameter(Mandatory=$true)][string]$UserName,
-  [Parameter(Mandatory=$true)][string]$Password,
-  [Parameter(Mandatory=$true)][string]$HostIP,
-  [Parameter(Mandatory=$true)][string]$HostKey
-  )
+    [Parameter(Mandatory=$true)][string]$UserName,
+    [Parameter(Mandatory=$true)][string]$Password,
+    [Parameter(Mandatory=$true)][string]$HostIP,
+    [Parameter(Mandatory=$true)][string]$HostKey,
+    [Parameter(Mandatory=$true)][string]$ProjectLocation,
+    [Parameter(Mandatory=$true)][string]$OutputDirectory
+)
 $CurrentDirectory = Get-Location
 
 
@@ -28,7 +30,7 @@ try
     $session.Open($sessionOptions)
     Write-Host "Uploading files"
     $synchronizationResult = $session.SynchronizeDirectories(
-      [WinSCP.SynchronizationMode]::Remote, "$CurrentDirectory\tasks", "\analytics", $True)
+      [WinSCP.SynchronizationMode]::Remote, "$CurrentDirectory\tasks", "$ProjectLocation", $True)
     $synchronizationResult.Check()
     Write-Host $synchronizationResult.Uploads
     foreach ($uploadedFile in $synchronizationResult.Uploads)
@@ -43,7 +45,7 @@ try
                     "Upload of $($uploadedFile.FileName) failed: $($uploadedFile.Error.Message)")
             }
         }
-    $create_tasks = "Write-Host 'test'" # "powershell $CurrentDirectory\tasks\create_tasks.ps1 -Location $CurrentDirectory"
+    $create_tasks = "Write-Host 'test'" # "powershell $ProjectLocation\tasks\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
     $session.ExecuteCommand($create_tasks).Check()
 }
 finally
