@@ -1,9 +1,14 @@
 log/
 test.ignore
+
 analytics-site/
+analytics-reporter/data
+
 .env
 .env.ps1
-node_modules/
-key.json
 env.ps1
+key.json
+
+node_modules/
+
 .vscode/
