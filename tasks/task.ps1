@@ -2,11 +2,20 @@
 param (
   [Parameter(Mandatory=$true)][string]$ProjectLocation,
   [Parameter(Mandatory=$true)][string]$OutputDirectory,
-  [Parameter(Mandatory=$true)][string]$Frequency,
+  [Parameter(Mandatory=$true)][string]$Frequency
 )
+
+Push-Location "$ProjectLocation\analytics-reporter"
+npm i
 
 # Source the environment variables for interacting with the reporter
 . $ProjectLocation\env.ps1
 
 # Run the analytics cli
-# npx analytics --frequency $Frequency --slim --verbose --output $OutputDirectory
+Write-Host "running $Frequency"
+
+mkdir -Force $OutputDirectory
+
+npx analytics --frequency $Frequency --slim --verbose --output $OutputDirectory
+
+Pop-Location
