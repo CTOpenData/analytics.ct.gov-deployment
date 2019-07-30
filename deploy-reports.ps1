@@ -30,7 +30,7 @@ try
     $session.Open($sessionOptions)
     Write-Host "Uploading files"
     $synchronizationResult = $session.SynchronizeDirectories(
-      [WinSCP.SynchronizationMode]::Remote, "$CurrentDirectory\tasks", "$ProjectLocation", $True)
+      [WinSCP.SynchronizationMode]::Remote, "$CurrentDirectory\tasks", "$ProjectLocation", $False)
     $synchronizationResult.Check()
     Write-Host $synchronizationResult.Uploads
     foreach ($uploadedFile in $synchronizationResult.Uploads)
@@ -45,12 +45,11 @@ try
                     "Upload of $($uploadedFile.FileName) failed: $($uploadedFile.Error.Message)")
             }
         }
-    $create_tasks = "Write-Host 'test'" # "powershell $ProjectLocation\tasks\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
-    $session.ExecuteCommand($create_tasks).Check()
-}
+    }
 finally
 {
     $session.Dispose()
 }
+    
 
-Pop-Location
+ssh $UserName@$HostIP "powershell .\$ProjectLocation\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
