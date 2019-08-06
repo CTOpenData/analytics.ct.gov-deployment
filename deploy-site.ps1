@@ -21,24 +21,41 @@ Remove-Item .\_site\package.json
 Remove-Item .\_site\webpack.config.js
 Pop-Location
 
-# Upload files
-& "winscp" `
-  /log="${CurrentDirectory}\log\WinSCP.log" /ini=nul `
-  /command `
-    "open sftp://${UserName}:${Password}@${HostIP}/ -hostkey=`"`"$HostKey`"`"" `
-    "cd analytics" `
-    "synchronize remote -delete .\analytics-site\_site\" `
-    "exit"
+Add-Type -Path "C:\Program Files (x86)\WinSCP\WinSCPnet.dll"
 
-$winscpResult = $LastExitCode
-if ($winscpResult -eq 0)
-{
-  Write-Host "Success"
-}
-else
-{
-  Write-Host "Error"
+# Set up session options
+$sessionOptions = New-Object WinSCP.SessionOptions -Property @{
+    Protocol = [WinSCP.Protocol]::Sftp
+    HostName = $HostIP
+    UserName = $UserName
+    Password = $Password
+    SshHostKeyFingerprint = $HostKey
 }
 
-Pop-Location
-exit $winscpResult
+$session = New-Object WinSCP.Session
+try
+{
+    # Connect
+    $session.Open($sessionOptions)
+    Write-Host "Uploading files"
+    $synchronizationResult = $session.SynchronizeDirectories(
+      [WinSCP.SynchronizationMode]::Remote, "$CurrentDirectory\analytics-site\_site\", "analytics", $true)
+    $synchronizationResult.Check()
+    Write-Host $synchronizationResult.Uploads
+    foreach ($uploadedFile in $synchronizationResult.Uploads)
+        {
+            if ($uploadedFile.Error -eq $Null)
+            {
+                Write-Host "Upload of $($uploadedFile.FileName) succeeded"
+            }
+            else
+            {
+                Write-Host (
+                    "Upload of $($uploadedFile.FileName) failed: $($uploadedFile.Error.Message)")
+            }
+        }
+    }
+finally
+{
+    $session.Dispose()
+}
