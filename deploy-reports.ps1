@@ -9,8 +9,6 @@ param (
 )
 $CurrentDirectory = Get-Location
 
-
-
 # Load WinSCP .NET assembly
 Add-Type -Path "C:\Program Files (x86)\WinSCP\WinSCPnet.dll"
 
@@ -50,6 +48,3 @@ finally
 {
     $session.Dispose()
 }
-    
-
-ssh $UserName@$HostIP "powershell .\$ProjectLocation\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
