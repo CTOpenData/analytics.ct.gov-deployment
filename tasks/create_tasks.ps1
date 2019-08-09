@@ -1,7 +1,9 @@
 # Set up location for scheduler to correctly read from
 param (
   [Parameter(Mandatory=$true)][string]$ProjectLocation,
-  [Parameter(Mandatory=$true)][string]$OutputDirectory
+  [Parameter(Mandatory=$true)][string]$OutputDirectory,
+  [Parameter(Mandatory=$true)][string]$Username,
+  [Parameter(Mandatory=$true)][string]$Password
 )
 $CurrentLocation = Get-Location
 
@@ -9,26 +11,19 @@ POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLo
 
 POWERSHELL "$CurrentLocation$ProjectLocation\teardown_tasks.ps1"
 
-# Realtime task (every minute)
-& "SCHTASKS" `
-/Create `
-/SC MINUTE `
-/MO 1 `
-/TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency realtime" `
-/TN Analytics-Realtime
+$Principal = New-ScheduledTaskPrincipal -UserId $Username -LogonType Password
 
-# Hourly tasks
-& "SCHTASKS" `
-/Create `
-/SC HOURLY `
-/MO 1 `
-/TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency hourly" `
-/TN Analytics-Hourly
+# Realtime task (every minute)
+$RealtimeTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-Timespan -Minutes 1)
+$RealtimeAction = New-ScheduledTaskAction -Execute "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency realtime" `
+Register-ScheduledTask -TaskName "Analytics-Realtime" -Trigger $RealtimeTrigger -Action $RealtimeAction -Principal $Principal -Password $Password
 
 # Daily tasks
-& "SCHTASKS" `
-/Create `
-/SC DAILY `
-/MO 1 `
-/TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency daily" `
-/TN Analytics-Daily
+$HourlyTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-Timespan -Hours 1)
+$HourlyAction = New-ScheduledTaskAction -Execute "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency hourly" `
+Register-ScheduledTask -TaskName "Analytics-Hourly" -Trigger $HourlyTrigger -Action $HourlyAction -Principal $Principal -Password $Password
+
+# Daily tasks
+$DailyTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-Timespan -Hours 1)
+$DailyAction = New-ScheduledTaskAction -Execute "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency daily" `
+Register-ScheduledTask -TaskName "Analytics-Daily" -Trigger $DailyTrigger -Action $DailyAction -Principal $Principal -Password $Password
