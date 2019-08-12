@@ -1,7 +1,9 @@
 # Set up location for scheduler to correctly read from
 param (
   [Parameter(Mandatory=$true)][string]$ProjectLocation,
-  [Parameter(Mandatory=$true)][string]$OutputDirectory
+  [Parameter(Mandatory=$true)][string]$OutputDirectory,
+  [Parameter(Mandatory=$true)][string]$UserName,
+  [Parameter(Mandatory=$true)][string]$Password
 )
 $CurrentLocation = Get-Location
 
@@ -16,6 +18,8 @@ POWERSHELL "$CurrentLocation$ProjectLocation\teardown_tasks.ps1"
 /MO 1 `
 /TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency realtime" `
 /TN Analytics-Realtime
+/RU $UserName 
+/RP $Password
 
 # Hourly tasks
 & "SCHTASKS" `
@@ -24,6 +28,9 @@ POWERSHELL "$CurrentLocation$ProjectLocation\teardown_tasks.ps1"
 /MO 1 `
 /TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency hourly" `
 /TN Analytics-Hourly
+/RU $UserName 
+/RP $Password
+
 
 # Daily tasks
 & "SCHTASKS" `
@@ -32,3 +39,5 @@ POWERSHELL "$CurrentLocation$ProjectLocation\teardown_tasks.ps1"
 /MO 1 `
 /TR "POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency daily" `
 /TN Analytics-Daily
+/RU $UserName 
+/RP $Password

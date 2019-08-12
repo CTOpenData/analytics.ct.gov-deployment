@@ -47,7 +47,7 @@ WinSCPnet.dll
 
 ### Usage
 ```powershell
-.\deploy-report-schedules.ps1 -UserName "Username" -HostIP "HostIP" -HostKey "Hostkey" -ProjectLocation "ProjectLocation" -OutputDirectory "OutputDirectory"
+.\deploy-report-schedules.ps1 -UserName "Username" -Password "Password" -HostIP "HostIP" -HostKey "Hostkey" -ProjectLocation "ProjectLocation" -OutputDirectory "OutputDirectory"
 ```
 ### Parameters descriptions 
 **ProjectLocation**: the location of keys, env scripts, and reports. Should be one of:
@@ -66,7 +66,7 @@ This script is run on the remote machine. It is invoked by the `deploy-reports.p
 #### Usage
 Note: This script is not invoked directly by the user.
 ```powershell
-.\create_tasks.ps1 -ProjectLocation "ProjectLocation" -OutputDirectory "OutputDirectory"
+.\create_tasks.ps1 -ProjectLocation "ProjectLocation" -OutputDirectory "OutputDirectory" -UserName "UserName" -Password "Password"
 ```
 
 #### Requirements (on server)
