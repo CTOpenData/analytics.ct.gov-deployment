@@ -10,6 +10,7 @@ $CurrentDirectory = Get-Location
 # Download and build site
 git clone -b master --single-branch https://github.com/CTOpenData/analytics.ct.gov.git analytics-site
 Push-Location .\analytics-site
+bundle
 bundle exec jekyll build
 Remove-Item .\_site\fake-data\ -recurse
 Remove-Item .\_site\docker-compose.yml
