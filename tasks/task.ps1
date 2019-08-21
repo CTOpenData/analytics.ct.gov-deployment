@@ -16,6 +16,6 @@ Write-Host "running $Frequency"
 
 mkdir -Force $OutputDirectory
 
-npx analytics --frequency $Frequency --slim --verbose --output $OutputDirectory
+npx analytics --frequency $Frequency --verbose --output $OutputDirectory
 
 Pop-Location
