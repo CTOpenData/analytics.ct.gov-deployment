@@ -6,6 +6,8 @@ param (
 $CurrentLocation = Get-Location
 
 POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency realtime
+POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency hourly
+POWERSHELL $CurrentLocation$ProjectLocation\task.ps1 -ProjectLocation $CurrentLocation$ProjectLocation -OutputDirectory $CurrentLocation$OutputDirectory -Frequency daily
 
 POWERSHELL "$CurrentLocation$ProjectLocation\teardown_tasks.ps1"
 
