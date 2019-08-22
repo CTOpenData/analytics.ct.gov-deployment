@@ -6,4 +6,4 @@ param (
     [Parameter(Mandatory=$true)][string]$OutputDirectory
 )
 
-ssh $UserName@$HostIP "powershell .\$ProjectLocation\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
+&"C:\Program Files\OpenSSH\ssh.exe" $UserName@$HostIP "powershell .\$ProjectLocation\create_tasks.ps1 -ProjectLocation $ProjectLocation -OutputDirectory $OutputDirectory"
