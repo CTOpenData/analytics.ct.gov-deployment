@@ -2,7 +2,16 @@
 
 This is the main repository for deploying the project. It contains the scripts necessary to deploy analytics.ct.gov to CT’s servers.
 
-There are two main entry points:
+# Setting up .env and key.json file
+1. Follow the setup instructions on [Analytics-reporter setup instructions](https://github.com/18F/analytics-reporter/#setup)
+1. Create a file called `key.json` inside of the `tasks\analytics-reporter\` folder and add the API keys that were collected from Google apis as described in [Analytics-reporter setup instructions](https://github.com/18F/analytics-reporter/#setup).
+1. Create a file called `.env` inside of the `tasks\analytics-reporter\` folder add the following variables as described in [Analytics-reporter setup instructions](https://github.com/18F/analytics-reporter/#setup).
+    ```
+    export ANALYTICS_REPORT_EMAIL="<service email>"
+    export ANALYTICS_REPORT_IDS="<report id>"
+    export ANALYTICS_KEY_PATH="./key.json"
+    ```
+There are three main entry points:
 1. __deploy-site.ps1__
 1. __deploy-reports.ps1__
 1. __deploy-report-schedules.ps1__
